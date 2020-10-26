@@ -14,29 +14,24 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <!--<li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li> -->
+                {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'create' %}">new post</a>
+                <a class="nav-link"><span id="user_name">{{ user.username }}</span>님 반갑습니다!</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Dropdown
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
+                <a class="nav-link" href="{% url 'create' %}">new post</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                <a class="nav-link" href="{% url 'logout' %}">logout</a>
                 </li>
+                {% else %}
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Sign in</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'signup' %}">Sign up</a>
+                </li>
+                {% endif %}
             </ul>
             <form class="form-inline my-2 my-lg-0" action="{% url 'search' %}" method="post">
                 {% csrf_token %}
