@@ -25,8 +25,9 @@ def create(request):
 
 def postcreate(request):
     blog = Blog()
-    blog.title = request.GET['title']
-    blog.body = request.GET['body']
+    blog.title = request.POST['title']
+    blog.body = request.POST['body']
+    blog.images = request.FILES['images']
     blog.pub_date = timezone.datetime.now()
     blog.save()
     return redirect('/crudapp/detail/' + str(blog.id))
@@ -51,6 +52,18 @@ def delete(request, blog_id):
     blog = Blog.objects.get(id=blog_id)
     blog.delete()
     return redirect('/')
+
+def search(request):
+    blogs = Blog.objects.all().order_by('-id')
+
+    q = request.POST.get('q', "") 
+
+    if q:
+        blogs = blogs.filter(title__icontains=q)
+        return render(request, 'search.html', {'blogs' : blogs, 'q' : q})
+    
+    else:
+        return render(request, 'search.html')
 
 def new(request):
     full_text = request.GET['fulltext']
