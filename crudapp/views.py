@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.core.paginator import Paginator
+from django.views.generic import View
 from .models import Blog
 from .forms import BlogUpdate
-
+from . import xhtml2pdf
 # Create your views here.
 
 def home(request):
@@ -82,3 +83,43 @@ def new(request):
 
     return render(request, 'new.html', {'fulltext': full_text, 'total': len(word_list), 'dictionary': word_dictionary.items()} )
 
+
+# 리포팅 테스트 - PDF 만들기.
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
+def some_view(request):
+    # Create the HttpResponse object with the appropriate PDF headers.
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+
+    # Create the PDF object, using the response object as its "file."
+    p = canvas.Canvas(response)
+
+    # Draw things on the PDF. Here's where the PDF generation happens.
+    # See the ReportLab documentation for the full list of functionality.
+    p.drawString(100, 100, "Hello world.")
+
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+    return response
+
+def test(request):
+    blogs = Blog.objects.order_by('-id')
+    today = timezone.now()
+    params = {
+        'today': today,
+        'blogs': blogs,            
+        'request': request
+    }
+    return render(request, 'test.html',params)
+
+def test2(request):
+    blogs = Blog.objects.order_by('-id')
+    today = timezone.now()
+    params = {
+        'today': today,
+        'blogs': blogs,            
+        'request': request
+    }
+    return xhtml2pdf.render_pdf_view('test.html', params)

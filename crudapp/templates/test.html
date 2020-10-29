@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>    
+    <style type="text/css">           
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+        html {
+            font-family: HYSMyeongJo-Medium;
+        }
+        table {
+            width: 100%;
+            border: 1px solid #444444;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h3>완제 - {{ today | date:"d/m/Y" }}</h3>
+        </div>
+
+        <div class="list-group">
+            <p>Name: jowanje</p>
+        </div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>c1</th>
+                <th>c2</th>
+                <th>c3</th>
+                <th>c4</th>            
+            </tr>
+            </thead>
+            <tbody>
+            {% for blog in blogs %}
+                <tr>
+                    <td style='color:red;'>{{ blog.title }}</td>
+                    <td>{{ blog.pub_date | date:"Y-m-d H:i:s" }}</td>
+                    <td>{{ blog.body }}</td>
+                    <td>
+                        {% if blog.images %}
+                            <img src="{{ blog.images.url }}" width="500" height="500">
+                        {% endif %}
+                    </td>                    
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
